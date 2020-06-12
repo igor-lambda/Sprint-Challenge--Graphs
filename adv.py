@@ -39,9 +39,21 @@ check for unexplored room so as not to backtrack our old steps.
 # This step creates a room in our graph_dict
 def create_vertex(self, room):
     room_dict = {}
-    for i in room.get_exits():
-        room_dict[i] = "?"
+    for e in room.get_exits():
+        room_dict[e] = "?"
         graph_dict[player.current_room.id] = room
+
+# Here we append any room which is unknown to a list, and select
+# one randomly
+def get_random_blind_exit(room):
+    blind = []
+    for e in room.get_exits():
+        # rooms in our graph_dict are refernced by id
+        if graph_dict[room.id][e] == "?":
+            blind.append(e)
+
+    return random.choice(blind)
+
 
 player.current_room.get_exits()
 print('lll', random.choice([2, 3, 4, 5]))
