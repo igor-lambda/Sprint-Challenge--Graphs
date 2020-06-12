@@ -35,16 +35,44 @@ The player travels by player.travel(direction), however we must
 have a way to travel to a random room from a given room, and to 
 check for unexplored room so as not to backtrack our old steps.
 '''
+# In this step, we will look through the current room's neighboors for
+# a blind exit, and return the path to that room. This will traverse
+# the entire graph, as long as all nodes are connected
+
+
+def get_blind_exit_bfs(starting_room):
+    q = []
+    visited = set()
+    q.append([starting_room])
+    # BFS algo
+    while len(q) > 0:
+        path_to_current_room = q.pop(0)
+        current_room = path_to_current_room[-1]
+        # Here we check if our graph_dict[room] contains any blind exits, in which case we're good and we return path
+        # This is what makes this a search, not a traversal
+        for key in graph_dict[current_room]:
+            if graph_dict[current_room][key] == "?":
+                return path_to_current_room
+        if current_room not in visited:
+            visited.add(current_room)
+            # After current room added to visted, we need queue up rooms that needs to check for unexplored exits
+            # Important to remember, that we are exploring the already explored graph that we are building, not
+            # trabeling in breadth first fashion
+            for room in graph_dict[current_room]:
+                q.append([*path_to_current_room, room])
 
 # This step creates a room in our graph_dict
-def create_vertex(self, room):
+
+
+def create_vertex(room):
     room_dict = {}
     for e in room.get_exits():
         room_dict[e] = "?"
-        graph_dict[player.current_room.id] = room
+    graph_dict[room.id] = room
 
 # Here we append any room which is unknown to a list, and select
 # one randomly
+
 def get_random_blind_exit(room):
     blind = []
     for e in room.get_exits():
@@ -55,8 +83,7 @@ def get_random_blind_exit(room):
     return random.choice(blind)
 
 
-player.current_room.get_exits()
-print('lll', random.choice([2, 3, 4, 5]))
+create_vertex(player.current_room)
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
