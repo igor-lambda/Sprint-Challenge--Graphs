@@ -17,7 +17,7 @@ world = World()
 map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
-room_graph=literal_eval(open(map_file, "r").read())
+room_graph = literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
@@ -28,8 +28,23 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
+graph_dict = {}
 
+'''
+The player travels by player.travel(direction), however we must
+have a way to travel to a random room from a given room, and to 
+check for unexplored room so as not to backtrack our old steps.
+'''
 
+# This step creates a room in our graph_dict
+def create_vertex(self, room):
+    room_dict = {}
+    for i in room.get_exits():
+        room_dict[i] = "?"
+        graph_dict[player.current_room.id] = room
+
+player.current_room.get_exits()
+print('lll', random.choice([2, 3, 4, 5]))
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
@@ -41,11 +56,11 @@ for move in traversal_path:
     visited_rooms.add(player.current_room)
 
 if len(visited_rooms) == len(room_graph):
-    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+    print(
+        f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
 
 
 #######
